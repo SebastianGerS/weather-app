@@ -101,6 +101,11 @@ class WeatherInfo extends Component {
       let bar = <WeatherBar current= {this.state.week[i]} />
       week.push(bar);
     }
+    console.log(week);
+    console.log(week.sort(function(a, b) {
+      console.log(a.props.current.date);
+      return a.props.current.date-b.props.current.date;
+    }));
     
 
     return (
@@ -158,7 +163,6 @@ class WeatherInfo extends Component {
             }
         });
       });
-      console.log(this.state.week);
     }).catch(error => {
       console.log(error);
     });
