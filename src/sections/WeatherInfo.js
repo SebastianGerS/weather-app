@@ -1,12 +1,18 @@
 import React, { Component } from 'react';
 import WeatherBar from '../components/weatherBar/WeatherBar';
 import DailyWeather from '../components/weather/daily/DailyWeather';
+import HourlyWeather from '../components/weather/hourly/HourlyWeather';
 import DARKSKYKEY from './APIKeys';
+import Tab from '../components/tab/Tab';
+import './WeatherInfo.css';
+
 
 class WeatherInfo extends Component {
   constructor() {
     super();
+    this.changeTab = this.changeTab.bind(this);
     this.state = {
+      activeTab: 0,      
       lat: undefined, 
       lon: undefined,
       selectedTempUnit: `${String.fromCharCode(176)}C`,
@@ -18,78 +24,10 @@ class WeatherInfo extends Component {
         sunset: undefined,
       },
       week: [
-        {
-          weekday: undefined,
-          tempMin: undefined,
-          tempMax: undefined,
-          windSpeed: undefined,
-          humidity: undefined,
-          sunrise: undefined,
-          sunset: undefined,
-        },
-        {
-          weekday: undefined,
-          tempMin: undefined,
-          tempMax: undefined,
-          windSpeed: undefined,
-          humidity: undefined,
-          sunrise: undefined,
-          sunset: undefined,
-        },
-        {
-          weekday: undefined,
-          tempMin: undefined,
-          tempMax: undefined,
-          windSpeed: undefined,
-          humidity: undefined,
-          sunrise: undefined,
-          sunset: undefined,
-        },
-        {
-          weekday: undefined,
-          tempMin: undefined,
-          tempMax: undefined,
-          windSpeed: undefined,
-          humidity: undefined,
-          sunrise: undefined,
-          sunset: undefined,
-        },
-        {
-          weekday: undefined,
-          tempMin: undefined,
-          tempMax: undefined,
-          windSpeed: undefined,
-          humidity: undefined,
-          sunrise: undefined,
-          sunset: undefined,
-        },
-        {
-          weekday: undefined,
-          tempMin: undefined,
-          tempMax: undefined,
-          windSpeed: undefined,
-          humidity: undefined,
-          sunrise: undefined,
-          sunset: undefined,
-        },
-        {
-          weekday: undefined,
-          tempMin: undefined,
-          tempMax: undefined,
-          windSpeed: undefined,
-          humidity: undefined,
-          sunrise: undefined,
-          sunset: undefined,
-        },
-        {
-          weekday: undefined,
-          tempMin: undefined,
-          tempMax: undefined,
-          windSpeed: undefined,
-          humidity: undefined,
-          sunrise: undefined,
-          sunset: undefined,
-        },
+        
+      ],
+      hourly: [
+
       ],
     }
   }
@@ -103,20 +41,34 @@ class WeatherInfo extends Component {
       this.getWeatherData();
     }
   }
-  
 
   render() {
-    const week = [];
-    for(let i = 0; i < 8; i++) {
-      let bar = <DailyWeather day={this.state.week[i]} />
-      week.push(bar);
+    const content = [];
+    if(this.state.activeTab === 1) {
+      for(let i = 0; i < 8; i++) {
+        let bar = <DailyWeather day={this.state.week[i]} />
+        content.push(bar);
+      }
+    } else if (this.state.activeTab === 2 ) {
+      for(let j = 0; j < 49; j++) {
+        let bar = <HourlyWeather hour={this.state.hourly[j]} />
+        content.push(bar);
+      }
     }
-    console.log(week);
-   
     return (
-      <section className="weatherInfo">
-       <WeatherBar current={this.state.currentDay} />
-       {week}
+      <section>
+          <nav>
+            <ul className="tabs">
+              <Tab index={0} name="Home" changeTab={this.changeTab} />
+              <Tab index={1} name="Weekly" changeTab={this.changeTab} />
+              <Tab index={2}name="Hourly" changeTab={this.changeTab} />
+              <Tab index={3} name="Sumary" changeTab={this.changeTab} />
+            </ul>
+          </nav>
+        <article className="weatherInfo">
+        <WeatherBar current={this.state.currentDay} />
+        {content}
+        </article>
       </section>
     );
   }
@@ -172,8 +124,30 @@ class WeatherInfo extends Component {
         });
         index++;
       });
+      let hIndex = 0
+      data.hourly.data.forEach(hour => {
+        let date = new Date(hour.time * 1000).toLocaleTimeString();
+        this.setState({
+          hourly: {
+            ...this.state.hourly,
+            [`${hIndex}`]: {
+              time: date,
+              temp: `${hour.temperature} ${this.state.selectedTempUnit}`,
+              windSpeed: `${hour.windSpeed} m/s`,
+              humidity: `${hour.humidity * 100}%`,
+            }
+          }
+        });
+        hIndex++;
+      });
     }).catch(error => {
       console.log(error);
+    });
+  }
+
+  changeTab(index) {
+    return this.setState({
+      activeTab: index
     });
   }
 }

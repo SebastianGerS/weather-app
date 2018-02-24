@@ -1,0 +1,16 @@
+.hourlyWeather {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 150px;
+  width: 100%;
+  background-color:black;
+  margin: 1em 0;
+  color:white;
+}
+
+.hourlyWeather p {
+  margin: 0;
+
+}
