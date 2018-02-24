@@ -7,7 +7,6 @@ class WeatherBar extends Component {
    
   }
 
-  
   render() {
     return (
       <section className="weatherBar">
@@ -29,9 +28,7 @@ class WeatherBar extends Component {
       </section>
     );
   }
-
   
- 
 }
 
 export default WeatherBar

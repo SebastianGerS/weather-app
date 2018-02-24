@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import WeatherBar from '../components/weatherBar/WeatherBar';
+import DailyWeather from '../components/weather/daily/DailyWeather';
 import DARKSKYKEY from './APIKeys';
 
 class WeatherInfo extends Component {
@@ -18,7 +19,7 @@ class WeatherInfo extends Component {
       },
       week: [
         {
-          date: undefined,
+          weekday: undefined,
           tempMin: undefined,
           tempMax: undefined,
           windSpeed: undefined,
@@ -27,7 +28,7 @@ class WeatherInfo extends Component {
           sunset: undefined,
         },
         {
-          date: undefined,
+          weekday: undefined,
           tempMin: undefined,
           tempMax: undefined,
           windSpeed: undefined,
@@ -36,7 +37,7 @@ class WeatherInfo extends Component {
           sunset: undefined,
         },
         {
-          date: undefined,
+          weekday: undefined,
           tempMin: undefined,
           tempMax: undefined,
           windSpeed: undefined,
@@ -45,7 +46,7 @@ class WeatherInfo extends Component {
           sunset: undefined,
         },
         {
-          date: undefined,
+          weekday: undefined,
           tempMin: undefined,
           tempMax: undefined,
           windSpeed: undefined,
@@ -54,7 +55,7 @@ class WeatherInfo extends Component {
           sunset: undefined,
         },
         {
-          date: undefined,
+          weekday: undefined,
           tempMin: undefined,
           tempMax: undefined,
           windSpeed: undefined,
@@ -63,7 +64,7 @@ class WeatherInfo extends Component {
           sunset: undefined,
         },
         {
-          date: undefined,
+          weekday: undefined,
           tempMin: undefined,
           tempMax: undefined,
           windSpeed: undefined,
@@ -72,7 +73,16 @@ class WeatherInfo extends Component {
           sunset: undefined,
         },
         {
-          date: undefined,
+          weekday: undefined,
+          tempMin: undefined,
+          tempMax: undefined,
+          windSpeed: undefined,
+          humidity: undefined,
+          sunrise: undefined,
+          sunset: undefined,
+        },
+        {
+          weekday: undefined,
           tempMin: undefined,
           tempMax: undefined,
           windSpeed: undefined,
@@ -97,17 +107,12 @@ class WeatherInfo extends Component {
 
   render() {
     const week = [];
-    for(let i = 0; i < 7; i++) {
-      let bar = <WeatherBar current= {this.state.week[i]} />
+    for(let i = 0; i < 8; i++) {
+      let bar = <DailyWeather day={this.state.week[i]} />
       week.push(bar);
     }
     console.log(week);
-    console.log(week.sort(function(a, b) {
-      console.log(a.props.current.date);
-      return a.props.current.date-b.props.current.date;
-    }));
-    
-
+   
     return (
       <section className="weatherInfo">
        <WeatherBar current={this.state.currentDay} />
@@ -146,13 +151,16 @@ class WeatherInfo extends Component {
           sunset: new Date(data.daily.data[0].sunsetTime *1000).toLocaleTimeString(),
         },
       });
+
+      let index = 0;
+      let weekdays = ['Sunday','Monday', 'Tusday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
       data.daily.data.forEach(day => {
-        let weekDay = new Date(day.time * 1000).getDay();
+        let weekday = weekdays[new Date(day.time * 1000).getDay()];
         this.setState({
             week: {
               ...this.state.week,
-              [`${weekDay}`]: {
-                date: day.time,
+              [`${index}`]: {
+                weekday: weekday,
                 tempMin: `${day.temperatureMin} ${this.state.selectedTempUnit}`,
                 tempMax: `${day.temperatureMax} ${this.state.selectedTempUnit}`,
                 windSpeed: `${day.windSpeed} m/s`,
@@ -162,6 +170,7 @@ class WeatherInfo extends Component {
               }
             }
         });
+        index++;
       });
     }).catch(error => {
       console.log(error);
