@@ -11,6 +11,9 @@ class WeatherBar extends Component {
     return (
       <section className="weatherBar">
         <p>
+          {this.props.current.summary}
+        </p>
+        <p>
           The current tempreture is: {this.props.current.temp}
         </p>
         <p>

@@ -22,6 +22,7 @@ class HourlyWeather extends Component {
         <p>
           relative humitity: {this.props.hour.humidity}
         </p>
+        
       </section>
     );
   }

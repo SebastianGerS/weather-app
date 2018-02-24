@@ -31,6 +31,9 @@ class DailyWeather extends Component {
         <p>
           sunset: {this.props.day.sunset}
         </p>
+        <p>
+          {this.props.day.summary}
+        </p>
       </section>
     );
   }

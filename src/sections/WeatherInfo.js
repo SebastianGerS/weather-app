@@ -15,13 +15,14 @@ class WeatherInfo extends Component {
       activeTab: 0,      
       lat: undefined, 
       lon: undefined,
-      selectedTempUnit: `${String.fromCharCode(176)}C`,
+      selectedTempScale: `${String.fromCharCode(176)}C`,
       currentDay: {
         temp: undefined,
         windSpeed: undefined,
         humidity: undefined,
         sunrise: undefined,
         sunset: undefined,
+        summary: undefined,
       },
       week: [
         
@@ -37,13 +38,16 @@ class WeatherInfo extends Component {
     
   }
   componentDidUpdate(prevProps, prevState) {
-    if(this.state.lat !== prevState.lat && this.state.lon !== prevState.lon) {
+    if(this.state.lat !== prevState.lat && this.state.lon !== prevState.lon 
+       || this.state.selectedTempScale !== prevState.selectedTempScale ) {
+
       this.getWeatherData();
     }
   }
 
   render() {
     const content = [];
+    let optionalScale;
     if(this.state.activeTab === 1) {
       for(let i = 0; i < 8; i++) {
         let bar = <DailyWeather day={this.state.week[i]} />
@@ -54,20 +58,34 @@ class WeatherInfo extends Component {
         let bar = <HourlyWeather hour={this.state.hourly[j]} />
         content.push(bar);
       }
+    } else if (this.state.activeTab === 3 ) {
+      for(let k = 0; k < 8; k++) {
+        let p =  <p>On {this.state.week[k].weekday} the weather will be {this.state.week[k].summary}</p>
+        content.push(p);
+      }
+    }
+    if(this.state.selectedTempScale === `${String.fromCharCode(176)}C`) {
+      optionalScale = `${String.fromCharCode(176)}F`;
+    } else {
+      optionalScale = `${String.fromCharCode(176)}C`;
     }
     return (
       <section>
-          <nav>
-            <ul className="tabs">
-              <Tab index={0} name="Home" changeTab={this.changeTab} />
-              <Tab index={1} name="Weekly" changeTab={this.changeTab} />
-              <Tab index={2}name="Hourly" changeTab={this.changeTab} />
-              <Tab index={3} name="Sumary" changeTab={this.changeTab} />
-            </ul>
-          </nav>
+        <nav>
+          <ul className="tabs">
+            <Tab index={0} name="Home" changeTab={this.changeTab} />
+            <Tab index={1} name="Weekly" changeTab={this.changeTab} />
+            <Tab index={2} name="Hourly" changeTab={this.changeTab} />
+            <Tab index={3} name="Overview" changeTab={this.changeTab} />
+          </ul>
+        </nav>
+        <div>
+          <p>Current Temreture Scale is {this.state.selectedTempScale}</p>
+          <button onClick={this.changeTempScale.bind(this)}>Change to {optionalScale}</button>
+        </div>
         <article className="weatherInfo">
-        <WeatherBar current={this.state.currentDay} />
-        {content}
+          <WeatherBar current={this.state.currentDay} />
+          {content}
         </article>
       </section>
     );
@@ -89,36 +107,42 @@ class WeatherInfo extends Component {
   getWeatherData() {
     const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
     const url = `https://api.darksky.net/forecast/${DARKSKYKEY}/${this.state.lat},${this.state.lon}?units=si`;
-
+    const weekdays = ['Sunday','Monday', 'Tusday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+ 
     fetch(proxyUrl + url
     ).then(res => res.json()
     ).then(data => {
+      let temp = this.getTempWithScale(data.currently.temperature);
       console.log(data)
       this.setState({ 
         currentDay: { 
-          temp: `${data.currently.temperature} ${this.state.selectedTempUnit}`,
+          temp: temp,
           windSpeed: `${data.currently.windSpeed} m/s`,
           humidity: `${data.currently.humidity * 100}%`,
           sunrise: new Date(data.daily.data[0].sunriseTime * 1000).toLocaleTimeString(),
           sunset: new Date(data.daily.data[0].sunsetTime *1000).toLocaleTimeString(),
+          summary: data.currently.summary,
         },
       });
 
       let index = 0;
-      let weekdays = ['Sunday','Monday', 'Tusday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+      
       data.daily.data.forEach(day => {
-        let weekday = weekdays[new Date(day.time * 1000).getDay()];
+        const weekday = weekdays[new Date(day.time * 1000).getDay()];
+        const tempMax = this.getTempWithScale(day.temperatureMax);
+        const tempMin = this.getTempWithScale(day.temperatureMin);
         this.setState({
             week: {
               ...this.state.week,
               [`${index}`]: {
                 weekday: weekday,
-                tempMin: `${day.temperatureMin} ${this.state.selectedTempUnit}`,
-                tempMax: `${day.temperatureMax} ${this.state.selectedTempUnit}`,
+                tempMin: tempMax,
+                tempMax: tempMin,
                 windSpeed: `${day.windSpeed} m/s`,
                 humidity: `${day.humidity * 100}%`,
                 sunrise: new Date(day.sunriseTime * 1000).toLocaleTimeString(),
                 sunset: new Date(day.sunsetTime *1000).toLocaleTimeString(),
+                summary: day.summary,
               }
             }
         });
@@ -127,12 +151,13 @@ class WeatherInfo extends Component {
       let hIndex = 0
       data.hourly.data.forEach(hour => {
         let date = new Date(hour.time * 1000).toLocaleTimeString();
+        temp = this.getTempWithScale(hour.temperature);
         this.setState({
           hourly: {
             ...this.state.hourly,
             [`${hIndex}`]: {
               time: date,
-              temp: `${hour.temperature} ${this.state.selectedTempUnit}`,
+              temp: temp,
               windSpeed: `${hour.windSpeed} m/s`,
               humidity: `${hour.humidity * 100}%`,
             }
@@ -149,6 +174,26 @@ class WeatherInfo extends Component {
     return this.setState({
       activeTab: index
     });
+  }
+
+  changeTempScale() {
+    if (this.state.selectedTempScale === `${String.fromCharCode(176)}C`) {
+      this.setState({
+        selectedTempScale: `${String.fromCharCode(176)}F`
+      });
+    } else {
+      this.setState({
+        selectedTempScale: `${String.fromCharCode(176)}C`
+      });
+    }
+  }
+  getTempWithScale(temp) {
+    if( this.state.selectedTempScale === `${String.fromCharCode(176)}C`) {
+      temp = `${temp} ${this.state.selectedTempScale}`;
+    } else {
+      temp = `${(temp * (9/5) + 32).toFixed(2)} ${this.state.selectedTempScale}`;
+    }
+    return temp;
   }
 }
 
