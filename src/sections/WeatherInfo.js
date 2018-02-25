@@ -93,6 +93,7 @@ class WeatherInfo extends Component {
             <input value={this.state.location} type="text" onChange={this.updateValue} placeholder="location"/>
             <button type="submit"> Go!</button>
           </form>
+          <button onClick={this.getCurrentLocation.bind(this)}>Get current location</button>
         </div>
         <article className="weatherInfo">
           <WeatherBar current={this.state.currentDay} location={this.state.location}/>
@@ -108,6 +109,7 @@ class WeatherInfo extends Component {
         this.setState({ 
           lat: position.coords.latitude,
           lon: position.coords.longitude,
+          location: '',
         }, function() {
           this.getLocation();
         });
