@@ -2,10 +2,6 @@ import React, { Component } from 'react';
 import './WeatherBar.css';
 
 class WeatherBar extends Component {
-  constructor(props) {
-    super(props);
-   
-  }
 
   render() {
     return (

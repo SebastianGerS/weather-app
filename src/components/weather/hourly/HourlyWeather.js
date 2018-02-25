@@ -2,10 +2,6 @@ import React, { Component } from 'react';
 import './HourlyWeather.css';
 
 class HourlyWeather extends Component {
-  constructor(props) {
-    super(props);
-   
-  }
 
   render() {
     return (

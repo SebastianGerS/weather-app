@@ -57,17 +57,17 @@ class WeatherInfo extends Component {
     let optionalScale;
     if(this.state.activeTab === 1) {
       for(let i = 0; i < 8; i++) {
-        let bar = <DailyWeather day={this.state.week[i]} />
+        let bar = <DailyWeather key={this.state.week[i].id.toString()} day={this.state.week[i]} />
         content.push(bar);
       }
     } else if (this.state.activeTab === 2 ) {
       for(let j = 0; j < 49; j++) {
-        let bar = <HourlyWeather hour={this.state.hourly[j]} />
+        let bar = <HourlyWeather key={this.state.hourly[j].id} hour={this.state.hourly[j]} />
         content.push(bar);
       }
     } else if (this.state.activeTab === 3 ) {
       for(let k = 0; k < 8; k++) {
-        let p =  <p>On {this.state.week[k].weekday} the weather will be {this.state.week[k].summary}</p>
+        let p =  <p key={this.state.week[k].id}>On {this.state.week[k].weekday} the weather will be {this.state.week[k].summary}</p>
         content.push(p);
       }
     }
@@ -148,6 +148,7 @@ class WeatherInfo extends Component {
             week: {
               ...this.state.week,
               [`${index}`]: {
+                id: new Date().getTime(),
                 weekday: weekday,
                 tempMin: tempMax,
                 tempMax: tempMin,
@@ -169,6 +170,7 @@ class WeatherInfo extends Component {
           hourly: {
             ...this.state.hourly,
             [`${hIndex}`]: {
+              id: new Date().getTime(),
               time: date,
               temp: temp,
               windSpeed: `${hour.windSpeed} m/s`,
