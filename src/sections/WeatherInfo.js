@@ -12,8 +12,8 @@ class WeatherInfo extends Component {
   constructor(props) {
     super(props);
     this.changeTab = this.changeTab.bind(this);
-    this.getLocation = this.getLocation.bind(this)
-    this.updateValue = this.updateValue.bind(this)
+    this.getLocation = this.getLocation.bind(this);
+    this.updateValue = this.updateValue.bind(this);
     this.state = {
       activeTab: 0,   
       location: '',   
@@ -64,49 +64,55 @@ class WeatherInfo extends Component {
   }
 
   render() {
-    let content = [];
+    const dailys = [];
+    const hourlys = [];
+    const overviews = [];
+
+    let content;
     let optionalScale;
     if(this.state.activeTab === 1) {
       for(let i = 0; i < 8; i++) {
-        let bar = <DailyWeather key={this.state.week[i].id.toString()} day={this.state.week[i]} />
-        content.push(bar);
+        let key = `daily_${this.state.week[i].id}`;
+        let bar = <DailyWeather key={key} day={this.state.week[i]} />
+        dailys.push(bar);
       }
+      content = dailys;
     } else if (this.state.activeTab === 2 ) {
       for(let j = 0; j < 49; j++) {
-        let bar = <HourlyWeather key={this.state.hourly[j].id} hour={this.state.hourly[j]} />
-        content.push(bar);
+        let key = `hourly_${this.state.hourly[j].id}`;
+        let bar = <HourlyWeather key={key} hour={this.state.hourly[j]} />
+        hourlys.push(bar);
       }
+      content = 
+        <section className="hours">
+          <table>
+            <thead>
+              <tr>
+                <th>date</th>
+                <th>time</th>
+                <th>temperature</th>
+                <th>wind speed</th>
+                <th>relative humitity</th>
+              </tr>
+            </thead>
+            <tbody>
+              {hourlys}
+            </tbody>
+            <tfoot>
+            </tfoot>
+          </table>
+        </section>;
     } else if (this.state.activeTab === 3 ) {
       for(let k = 0; k < 8; k++) {
-        let p =  <div key={this.state.week[k].id} className="overview"> 
+        let key = `overview_${this.state.week[k].id}`;
+        let p =  <div key={key} className="overview"> 
                     <h3>{this.state.week[k].weekday}</h3>
                     <p>({this.state.week[k].date})</p>
                     <p>O{this.state.week[k].summary}</p>
                   </div>;
-        content.push(p);
+        overviews.push(p);
       }
-    }
-    if(content[0]) {
-      if(content[0].type.toString().includes('HourlyWeather')){
-        content = <section className="hours">
-                    <table>
-                      <thead>
-                        <tr>
-                          <th>date</th>
-                          <th>time</th>
-                          <th>temperature</th>
-                          <th>wind speed</th>
-                          <th>relative humitity</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {content}
-                      </tbody>
-                    </table>
-                  </section>;
-      }else if(content[0].type.toString().includes('div')){
-        content = <section className="overviews">{content}</section>
-      }
+      content = <section className="overviews">{overviews}</section>;
     }
    
     if(this.state.selectedTempScale === `${String.fromCharCode(176)}C`) {
@@ -139,33 +145,41 @@ class WeatherInfo extends Component {
       </section>
     );
   }
-
+  getCurrentLocationSuccess(position) {
+    this.setState({ 
+      lat: position.coords.latitude,
+      lon: position.coords.longitude,
+      location: '',
+    }, function() {
+      this.getLocation();
+    });
+  }
+  getCurrentLocationError() {
+    window.alert('Geolocation is not availible'); 
+    this.setState({ 
+      location: "London, King's Cross Station Platform 9¾"
+    }, function() {
+      this.getLocation();
+    });
+  }
   getCurrentLocation() {
     if ("geolocation" in navigator) {
-      navigator.geolocation.getCurrentPosition(position => {
-        this.setState({ 
-          lat: position.coords.latitude,
-          lon: position.coords.longitude,
-          location: '',
-        }, function() {
-          this.getLocation();
-        });
-      });
+      navigator.geolocation.getCurrentPosition(this.getCurrentLocationSuccess.bind(this), this.getCurrentLocationError.bind(this));
+      
     } else {
-
+      window.alert('Geolocation is not availible');      
     }
   }
 
   getWeatherData() {
     const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
     const url = `https://api.darksky.net/forecast/${DARKSKYKEY}/${this.state.lat},${this.state.lon}?units=si`;
-    const weekdays = ['Sunday','Monday', 'Tusday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const weekdays = ['Sunday','Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
  
     fetch(proxyUrl + url
     ).then(res => res.json()
     ).then(data => {
       let temp = this.getTempWithScale(data.currently.temperature);
-      console.log(data);
       this.setState({ 
         currentDay: { 
           temp: temp,
@@ -226,7 +240,7 @@ class WeatherInfo extends Component {
         hIndex++;
       });
     }).catch(error => {
-      console.log(error);
+      window.alert('could not fetch data');
     });
   }
 
@@ -263,7 +277,7 @@ class WeatherInfo extends Component {
         }
        
       }).catch(error => {
-        console.log(error);
+        window.alert('could not fetch location');
     });
   }
 
@@ -297,7 +311,6 @@ class WeatherInfo extends Component {
     this.setState({
       location: event.target.value
     })
-    console.log(this.state.location);
   }
 }
 

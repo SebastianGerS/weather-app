@@ -7,7 +7,7 @@ class WeatherBar extends Component {
     return (
       <section className="weatherBar">
         <h2>{this.props.location}</h2>
-        <p>Today:&nbsp;&nbsp;{this.props.current.summary}</p>
+        <p>Currently:&nbsp;&nbsp;{this.props.current.summary}</p>
         <div>
           <p>Temperature:&nbsp;&nbsp;{this.props.current.temp}</p>
           <p>Wind speed:&nbsp;&nbsp;{this.props.current.windSpeed}</p>
