@@ -22,8 +22,9 @@ nav ul {
 
 .weatherInfo > div {
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
   align-items: center;
+  flex-wrap: wrap;
   width: 100%;
   height: auto;
   padding: 5em 0;
@@ -64,6 +65,7 @@ nav ul {
 .weatherInfo table {
   background-color: lightskyblue;
   font-size: 0.8em;
+  margin: 0 1em;
 }
 
 .weatherInfo table th {
@@ -71,14 +73,13 @@ nav ul {
 }
 
 form input {
-  border: 1px solid lightskyblue;
-  box-shadow: 1px 4px 4px rgba(135, 206, 250, 0.8);
+  border: 2px solid rgba(173, 255, 47, 0.9);
   background: lightskyblue;
   padding: 1.1em;
-  margin-right: 1em;
   width: 25em;
   font-family: cinzelbold, 'Times New Roman', Times, serif;
   text-align: center;
+  margin: 1em 0 0 0.5em;
 }
 
 button {
@@ -90,5 +91,6 @@ button {
   background: lightskyblue;
   padding: 1em;
   font-family: cinzelbold, 'Times New Roman', Times, serif;
+  margin: 1em 2em;
 }
 

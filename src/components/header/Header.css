@@ -19,3 +19,9 @@
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
+
+@media only screen and (max-width:33.4em) {
+  .header {
+    padding-bottom: 50px;
+  }
+}

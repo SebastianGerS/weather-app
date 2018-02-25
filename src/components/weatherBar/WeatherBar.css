@@ -12,6 +12,7 @@
 .weatherBar div {
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
   width:100%;
   justify-content: center;
   margin-top: 1em;
@@ -19,7 +20,7 @@
 
 .weatherBar p {
   display: inline-block;
-  margin: 0 2em;
+  margin: 0.5em 2em;
 }
 
 .weatherBar h2 {

@@ -1,10 +1,12 @@
 .dailyWeather {
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
-  height: 150px;
-  width: 90%;
+  justify-content: center;
+  height: auto;
+  width: auto;
+  max-width: 90%;
   background-color:black;
   margin: 1em 0;
   color:white;
@@ -13,10 +15,20 @@
 
 .dailyWeather div {
   display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  margin: 0 1em;
+  
+}
+.dailyWeather div > div {
+  display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: flex-start;
-  margin: 0 1em;
+  align-items: center;
+  max-width: 250px;
+  padding: 1em;
 }
 
 .dailyWeather p {
