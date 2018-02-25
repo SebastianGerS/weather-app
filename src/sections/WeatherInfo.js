@@ -152,8 +152,8 @@ class WeatherInfo extends Component {
               [`${index}`]: {
                 id: new Date().getTime(),
                 weekday: weekday,
-                tempMin: tempMax,
-                tempMax: tempMin,
+                tempMin: tempMin,
+                tempMax: tempMax,
                 windSpeed: `${day.windSpeed} m/s`,
                 humidity: `${Math.round(day.humidity * 100)}%`,
                 sunrise: new Date(day.sunriseTime * 1000).toLocaleTimeString(),
