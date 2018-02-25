@@ -4,14 +4,15 @@
 }
 
 .header {
-  background-color: #222;
+  background-color: black;
   height: 150px;
-  padding: 20px;
+  padding-top: 20px;
   color: white;
 }
 
 .title {
-  font-size: 1.5em;
+  font-size: 2em;
+  font-family: cinzelblack;
 }
 
 @keyframes App-logo-spin {

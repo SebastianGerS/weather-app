@@ -2,3 +2,7 @@
   background-color:black;
   color:white;
 }
+
+.hourlyWeather td{
+  padding: 0.5em;
+}

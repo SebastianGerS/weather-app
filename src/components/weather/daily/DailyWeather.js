@@ -12,23 +12,23 @@ class DailyWeather extends Component {
         </div>
         <div>
           <h4>Temperature</h4>
-          <p>Max: {this.props.day.tempMax}</p>
-          <p> Min: {this.props.day.tempMin}</p>
+          <p>Max:&nbsp;&nbsp;{this.props.day.tempMax}</p>
+          <p> Min:&nbsp;&nbsp;{this.props.day.tempMin}</p>
         </div>
         <div>
           <p>
-            wind speed: {this.props.day.windSpeed}
+            wind speed:&nbsp;&nbsp;{this.props.day.windSpeed}
           </p>
           <p>
-            relative humitity: {this.props.day.humidity}
+            relative humitity:&nbsp;&nbsp;{this.props.day.humidity}
           </p>
         </div>
         <div>
           <p>
-            sunrise: {this.props.day.sunrise}
+            sunrise:&nbsp;&nbsp;{this.props.day.sunrise}
           </p>
           <p>
-            sunset: {this.props.day.sunset}
+            sunset:&nbsp;&nbsp;{this.props.day.sunset}
           </p>
         </div>
       </section>

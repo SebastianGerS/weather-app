@@ -1,7 +1,6 @@
 nav {
-  background-color: #222;
+  background-color: black;
   color: white;
-
 }
 
 nav ul {
@@ -10,21 +9,27 @@ nav ul {
   justify-content: center;
   align-items: center;
   margin: 0;
-  padding: 0;
+  padding: 1em 0;
 }
+
 .weatherInfo {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  background-color: lightskyblue;
 }
-.weatherInfo div {
+
+.weatherInfo > div {
   display: flex;
   justify-content: space-around;
   align-items: center;
-  width: 90%;
-  height: 50px;
+  width: 100%;
+  height: auto;
+  padding: 5em 0;
+  background-color: black;
 }
+
 .weatherInfo .overviews {
   display: flex;
   flex-direction: row;
@@ -32,31 +37,58 @@ nav ul {
   flex-wrap: wrap;
   width: 100%;
   margin-top:2em;
-
 }
+
 .weatherInfo .overview {
   display: inline-block;
   width: 250px;
-  height: 250px;
+  height: auto;
   background-color: black;
   margin: 1em;
+  padding: 1em;
   color: white;
-
-
 }
+
+.overview h3 {
+  font-size: 2em;
+}
+
+.weatherInfo .hours {
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  background-color: black;
+  width:100%;
+}
+
+.weatherInfo table {
+  background-color: lightskyblue;
+  font-size: 0.8em;
+}
+
+.weatherInfo table th {
+  padding: 0.5em;
+}
+
 form input {
-  border:none;
+  border: 1px solid lightskyblue;
+  box-shadow: 1px 4px 4px rgba(135, 206, 250, 0.8);
+  background: lightskyblue;
+  padding: 1.1em;
+  margin-right: 1em;
+  width: 25em;
+  font-family: cinzelbold, 'Times New Roman', Times, serif;
+  text-align: center;
+}
+
+button {
+  border: 1px solid lightskyblue;
+  box-shadow: 1px 4px 4px rgba(135, 206, 250, 0.8);
+  text-align: center;
+  cursor: pointer; 
+  color: black;
   background: lightskyblue;
   padding: 1em;
-  margin-right: 0.5em;
-  width: 20em;
+  font-family: cinzelbold, 'Times New Roman', Times, serif;
 }
-button {
-border: none;
-box-shadow: 1px 2px 3px #222;
-text-align: center;
-cursor: pointer; 
-color: #222;
-background: lightskyblue;
-padding: 1em;
-}
+

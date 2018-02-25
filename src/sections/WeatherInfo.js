@@ -78,26 +78,32 @@ class WeatherInfo extends Component {
       }
     } else if (this.state.activeTab === 3 ) {
       for(let k = 0; k < 8; k++) {
-        let p =  <div className="overview"><p key={this.state.week[k].id}>On {this.state.week[k].weekday} the weather will be {this.state.week[k].summary}</p></div>
+        let p =  <div key={this.state.week[k].id} className="overview"> 
+                    <h3>{this.state.week[k].weekday}</h3>
+                    <p>({this.state.week[k].date})</p>
+                    <p>O{this.state.week[k].summary}</p>
+                  </div>;
         content.push(p);
       }
     }
     if(content[0]) {
       if(content[0].type.toString().includes('HourlyWeather')){
-        content = <table>
-                    <thead>
-                      <tr>
-                        <th>date</th>
-                        <th>time</th>
-                        <th>temperature</th>
-                        <th>wind speed</th>
-                        <th>relative humitity</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {content}
-                    </tbody>
-                  </table>
+        content = <section className="hours">
+                    <table>
+                      <thead>
+                        <tr>
+                          <th>date</th>
+                          <th>time</th>
+                          <th>temperature</th>
+                          <th>wind speed</th>
+                          <th>relative humitity</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {content}
+                      </tbody>
+                    </table>
+                  </section>;
       }else if(content[0].type.toString().includes('div')){
         content = <section className="overviews">{content}</section>
       }
@@ -174,7 +180,9 @@ class WeatherInfo extends Component {
       let index = 0;
       
       data.daily.data.forEach(day => {
-        const weekday = weekdays[new Date(day.time * 1000).getDay()];
+        const d = new Date(day.time * 1000);
+        const date = d.toDateString().substr(4, d.toDateString().length);
+        const weekday = weekdays[d.getDay()];
         const tempMax = this.getTempWithScale(day.temperatureMax);
         const tempMin = this.getTempWithScale(day.temperatureMin);
         this.setState({
@@ -183,6 +191,7 @@ class WeatherInfo extends Component {
               [`${index}`]: {
                 id: new Date().getTime(),
                 weekday: weekday,
+                date: date,
                 tempMin: tempMin,
                 tempMax: tempMax,
                 windSpeed: `${day.windSpeed} m/s`,

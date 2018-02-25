@@ -8,6 +8,7 @@
   background-color:black;
   margin: 1em 0;
   color:white;
+  font-family: cinzelregular, 'Times New Roman', Times, serif;
 }
 
 .dailyWeather div {
@@ -15,9 +16,11 @@
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
+  margin: 0 1em;
 }
 
 .dailyWeather p {
   margin: 0;
+  padding: 0.5em 0;
 
 }
