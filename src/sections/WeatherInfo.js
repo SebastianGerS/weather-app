@@ -5,6 +5,7 @@ import HourlyWeather from '../components/weather/hourly/HourlyWeather';
 import {DARKSKYKEY, GEOLOCATIONKEY }from './APIKeys';
 import Tab from '../components/tab/Tab';
 import './WeatherInfo.css';
+import { clearInterval } from 'timers';
 
 
 class WeatherInfo extends Component {
@@ -18,6 +19,7 @@ class WeatherInfo extends Component {
       location: '',   
       lat: undefined, 
       lon: undefined,
+      interval: undefined,
       selectedTempScale: `${String.fromCharCode(176)}C`,
       currentDay: {
         temp: undefined,
@@ -35,6 +37,7 @@ class WeatherInfo extends Component {
       ],
     }
   }
+ 
   componentWillMount() {
     this.getCurrentLocation();
     
@@ -45,11 +48,19 @@ class WeatherInfo extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if((this.state.lat !== prevState.lat && this.state.lon !== prevState.lon )
-       || (this.state.selectedTempScale !== prevState.selectedTempScale )) {
-
+    if( (this.state.lat !== prevState.lat && this.state.lon !== prevState.lon )
+    || (this.state.selectedTempScale !== prevState.selectedTempScale )) {
       this.getWeatherData();
+      if(!this.state.interval) {
+        let interval = setInterval(this.getWeatherData.bind(this), 1000*60*10);
+        this.setState( {
+          interval: interval
+        });
+      } 
     }
+  }
+  componentWillUnmount() {
+    clearInterval(this.state.interval._id);
   }
 
   render() {
