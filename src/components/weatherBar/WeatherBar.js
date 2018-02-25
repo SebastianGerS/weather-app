@@ -10,6 +10,7 @@ class WeatherBar extends Component {
   render() {
     return (
       <section className="weatherBar">
+        <h2>{this.props.location}</h2>
         <p>
           {this.props.current.summary}
         </p>

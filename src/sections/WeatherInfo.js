@@ -2,17 +2,20 @@ import React, { Component } from 'react';
 import WeatherBar from '../components/weatherBar/WeatherBar';
 import DailyWeather from '../components/weather/daily/DailyWeather';
 import HourlyWeather from '../components/weather/hourly/HourlyWeather';
-import DARKSKYKEY from './APIKeys';
+import {DARKSKYKEY, GEOLOCATIONKEY }from './APIKeys';
 import Tab from '../components/tab/Tab';
 import './WeatherInfo.css';
 
 
 class WeatherInfo extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.changeTab = this.changeTab.bind(this);
+    this.getLocation = this.getLocation.bind(this)
+    this.updateValue = this.updateValue.bind(this)
     this.state = {
-      activeTab: 0,      
+      activeTab: 0,   
+      location: '',   
       lat: undefined, 
       lon: undefined,
       selectedTempScale: `${String.fromCharCode(176)}C`,
@@ -32,14 +35,18 @@ class WeatherInfo extends Component {
       ],
     }
   }
-    
-  componentDidMount() {
+  componentWillMount() {
     this.getCurrentLocation();
     
   }
+
+  componentDidMount() {
+    
+  }
+
   componentDidUpdate(prevProps, prevState) {
-    if(this.state.lat !== prevState.lat && this.state.lon !== prevState.lon 
-       || this.state.selectedTempScale !== prevState.selectedTempScale ) {
+    if((this.state.lat !== prevState.lat && this.state.lon !== prevState.lon )
+       || (this.state.selectedTempScale !== prevState.selectedTempScale )) {
 
       this.getWeatherData();
     }
@@ -82,9 +89,13 @@ class WeatherInfo extends Component {
         <div>
           <p>Current Temreture Scale is {this.state.selectedTempScale}</p>
           <button onClick={this.changeTempScale.bind(this)}>Change to {optionalScale}</button>
+          <form onSubmit={this.getLocation}>
+            <input value={this.state.location} type="text" onChange={this.updateValue} placeholder="location"/>
+            <button type="submit"> Go!</button>
+          </form>
         </div>
         <article className="weatherInfo">
-          <WeatherBar current={this.state.currentDay} />
+          <WeatherBar current={this.state.currentDay} location={this.state.location}/>
           {content}
         </article>
       </section>
@@ -97,7 +108,9 @@ class WeatherInfo extends Component {
         this.setState({ 
           lat: position.coords.latitude,
           lon: position.coords.longitude,
-        })
+        }, function() {
+          this.getLocation();
+        });
       });
     } else {
 
@@ -113,12 +126,12 @@ class WeatherInfo extends Component {
     ).then(res => res.json()
     ).then(data => {
       let temp = this.getTempWithScale(data.currently.temperature);
-      console.log(data)
+      console.log(data);
       this.setState({ 
         currentDay: { 
           temp: temp,
           windSpeed: `${data.currently.windSpeed} m/s`,
-          humidity: `${data.currently.humidity * 100}%`,
+          humidity: `${Math.round(data.currently.humidity * 100)}%`,
           sunrise: new Date(data.daily.data[0].sunriseTime * 1000).toLocaleTimeString(),
           sunset: new Date(data.daily.data[0].sunsetTime *1000).toLocaleTimeString(),
           summary: data.currently.summary,
@@ -139,7 +152,7 @@ class WeatherInfo extends Component {
                 tempMin: tempMax,
                 tempMax: tempMin,
                 windSpeed: `${day.windSpeed} m/s`,
-                humidity: `${day.humidity * 100}%`,
+                humidity: `${Math.round(day.humidity * 100)}%`,
                 sunrise: new Date(day.sunriseTime * 1000).toLocaleTimeString(),
                 sunset: new Date(day.sunsetTime *1000).toLocaleTimeString(),
                 summary: day.summary,
@@ -159,7 +172,7 @@ class WeatherInfo extends Component {
               time: date,
               temp: temp,
               windSpeed: `${hour.windSpeed} m/s`,
-              humidity: `${hour.humidity * 100}%`,
+              humidity: `${Math.round(hour.humidity * 100)}%`,
             }
           }
         });
@@ -167,6 +180,43 @@ class WeatherInfo extends Component {
       });
     }).catch(error => {
       console.log(error);
+    });
+  }
+
+  getLocation(e) {
+ 
+    if (e) {
+      e.preventDefault();
+    }
+ 
+    let q = this.state.location;
+    let param;
+    if(q ===  ''){
+      param = 'latlng';
+      q = `${this.state.lat},${this.state.lon}`;
+      
+    } else {
+      param = 'address';
+    }
+  
+    const url = `https://maps.googleapis.com/maps/api/geocode/json?${param}=${q}&key=`
+    fetch(`${url}${GEOLOCATIONKEY}`
+      ).then(res => res.json()).then(res => {
+        if(param === 'address') {
+          const location = res.results[0].geometry.location;
+          this.setState({
+            lat: location.lat,
+            lon: location.lng,
+          });
+        } else {
+          const address =res.results[0]['formatted_address'];
+          this.setState({
+            location: address,
+          });
+        }
+       
+      }).catch(error => {
+        console.log(error);
     });
   }
 
@@ -194,6 +244,13 @@ class WeatherInfo extends Component {
       temp = `${(temp * (9/5) + 32).toFixed(2)} ${this.state.selectedTempScale}`;
     }
     return temp;
+  }
+
+  updateValue(event) {
+    this.setState({
+      location: event.target.value
+    })
+    console.log(this.state.location);
   }
 }
 
