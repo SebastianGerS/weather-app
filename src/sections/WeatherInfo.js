@@ -64,7 +64,7 @@ class WeatherInfo extends Component {
   }
 
   render() {
-    const content = [];
+    let content = [];
     let optionalScale;
     if(this.state.activeTab === 1) {
       for(let i = 0; i < 8; i++) {
@@ -78,10 +78,31 @@ class WeatherInfo extends Component {
       }
     } else if (this.state.activeTab === 3 ) {
       for(let k = 0; k < 8; k++) {
-        let p =  <p key={this.state.week[k].id}>On {this.state.week[k].weekday} the weather will be {this.state.week[k].summary}</p>
+        let p =  <div className="overview"><p key={this.state.week[k].id}>On {this.state.week[k].weekday} the weather will be {this.state.week[k].summary}</p></div>
         content.push(p);
       }
     }
+    if(content[0]) {
+      if(content[0].type.toString().includes('HourlyWeather')){
+        content = <table>
+                    <thead>
+                      <tr>
+                        <th>date</th>
+                        <th>time</th>
+                        <th>temperature</th>
+                        <th>wind speed</th>
+                        <th>relative humitity</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {content}
+                    </tbody>
+                  </table>
+      }else if(content[0].type.toString().includes('div')){
+        content = <section className="overviews">{content}</section>
+      }
+    }
+   
     if(this.state.selectedTempScale === `${String.fromCharCode(176)}C`) {
       optionalScale = `${String.fromCharCode(176)}F`;
     } else {
@@ -97,17 +118,16 @@ class WeatherInfo extends Component {
             <Tab index={3} name="Overview" changeTab={this.changeTab} />
           </ul>
         </nav>
-        <div>
-          <p>Current Temreture Scale is {this.state.selectedTempScale}</p>
-          <button onClick={this.changeTempScale.bind(this)}>Change to {optionalScale}</button>
-          <form onSubmit={this.getLocation}>
-            <input value={this.state.location} type="text" onChange={this.updateValue} placeholder="location"/>
-            <button type="submit"> Go!</button>
-          </form>
-          <button onClick={this.getCurrentLocation.bind(this)}>Get current location</button>
-        </div>
         <article className="weatherInfo">
           <WeatherBar current={this.state.currentDay} location={this.state.location}/>
+          <div>
+            <button onClick={this.changeTempScale.bind(this)}>Change to {optionalScale}</button>
+            <form onSubmit={this.getLocation}>
+              <input value={this.state.location} type="text" onChange={this.updateValue} placeholder="location"/>
+              <button type="submit"> Go!</button>
+            </form>
+            <button onClick={this.getCurrentLocation.bind(this)}>Get current location</button>
+          </div>
           {content}
         </article>
       </section>
@@ -177,14 +197,17 @@ class WeatherInfo extends Component {
       });
       let hIndex = 0
       data.hourly.data.forEach(hour => {
-        let date = new Date(hour.time * 1000).toLocaleTimeString();
+        const d =  new Date(hour.time * 1000)
+        const date = d.toDateString();
+        const time = d.toLocaleTimeString();
         temp = this.getTempWithScale(hour.temperature);
         this.setState({
           hourly: {
             ...this.state.hourly,
             [`${hIndex}`]: {
               id: new Date().getTime(),
-              time: date,
+              date: date,
+              time: time,
               temp: temp,
               windSpeed: `${hour.windSpeed} m/s`,
               humidity: `${Math.round(hour.humidity * 100)}%`,

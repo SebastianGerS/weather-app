@@ -7,8 +7,18 @@
   width: 100%;
   background-color:lightskyblue;
 }
+.weatherBar div {
+  display: flex;
+  flex-direction: row;
+  width:90%;
+  justify-content: space-between;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 1em;
+}
 
 .weatherBar p {
+  display: inline-block;
   margin: 0;
 
 }

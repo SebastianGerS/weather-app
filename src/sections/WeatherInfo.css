@@ -12,15 +12,51 @@ nav ul {
   margin: 0;
   padding: 0;
 }
-nav ul li {
-  display:flex;
+.weatherInfo {
+  display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  list-style: none;
-  width: 4em;
-  height: 2em;
-  margin: 0.5em 1em;
-  border: 1px solid white;
-  box-shadow: 1px 2px 3px white;
-  text-align: center;
+}
+.weatherInfo div {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 90%;
+  height: 50px;
+}
+.weatherInfo .overviews {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  flex-wrap: wrap;
+  width: 100%;
+  margin-top:2em;
+
+}
+.weatherInfo .overview {
+  display: inline-block;
+  width: 250px;
+  height: 250px;
+  background-color: black;
+  margin: 1em;
+  color: white;
+
+
+}
+form input {
+  border:none;
+  background: lightskyblue;
+  padding: 1em;
+  margin-right: 0.5em;
+  width: 20em;
+}
+button {
+border: none;
+box-shadow: 1px 2px 3px #222;
+text-align: center;
+cursor: pointer; 
+color: #222;
+background: lightskyblue;
+padding: 1em;
 }
