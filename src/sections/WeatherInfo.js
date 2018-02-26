@@ -108,7 +108,7 @@ class WeatherInfo extends Component {
         let p =  <div key={key} className="overview"> 
                     <h3>{this.state.week[k].weekday}</h3>
                     <p>({this.state.week[k].date})</p>
-                    <p>O{this.state.week[k].summary}</p>
+                    <p>{this.state.week[k].summary}</p>
                   </div>;
         overviews.push(p);
       }
