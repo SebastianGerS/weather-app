@@ -8,6 +8,7 @@ class Header extends Component {
       <header className="header">
         <img src={logo} className="logo" alt="logo" />
         <h1 className="title">Welcome to The Weather App</h1>
+        <a href="https://darksky.net/poweredby/">Powered by Dark Sky</a>
       </header> 
     );
   }

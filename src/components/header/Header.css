@@ -8,13 +8,17 @@
   height: 150px;
   padding-top: 20px;
   color: white;
+  padding-bottom: 50px;
 }
 
 .title {
   font-size: 2em;
   font-family: cinzelblack;
 }
-
+a {
+  text-decoration: none;
+  color: lightskyblue;
+}
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
@@ -22,6 +26,6 @@
 
 @media only screen and (max-width:33.4em) {
   .header {
-    padding-bottom: 50px;
+    padding-bottom: 75px;
   }
 }
