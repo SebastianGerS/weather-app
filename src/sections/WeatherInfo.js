@@ -6,6 +6,7 @@ import {DARKSKYKEY, GEOLOCATIONKEY }from './APIKeys';
 import Tab from '../components/tab/Tab';
 import './WeatherInfo.css';
 import { clearInterval } from 'timers';
+import uuidv4 from 'uuid/v4';
 
 
 class WeatherInfo extends Component {
@@ -72,14 +73,14 @@ class WeatherInfo extends Component {
     let optionalScale;
     if(this.state.activeTab === 1) {
       for(let i = 0; i < 8; i++) {
-        let key = `daily_${this.state.week[i].id}`;
+        let key = uuidv4();
         let bar = <DailyWeather key={key} day={this.state.week[i]} />
         dailys.push(bar);
       }
       content = dailys;
     } else if (this.state.activeTab === 2 ) {
       for(let j = 0; j < 49; j++) {
-        let key = `hourly_${this.state.hourly[j].id}`;
+        let key = uuidv4();
         let bar = <HourlyWeather key={key} hour={this.state.hourly[j]} />
         hourlys.push(bar);
       }
@@ -104,7 +105,7 @@ class WeatherInfo extends Component {
         </section>;
     } else if (this.state.activeTab === 3 ) {
       for(let k = 0; k < 8; k++) {
-        let key = `overview_${this.state.week[k].id}`;
+        let key = uuidv4();
         let p =  <div key={key} className="overview"> 
                     <h3>{this.state.week[k].weekday}</h3>
                     <p>({this.state.week[k].date})</p>
